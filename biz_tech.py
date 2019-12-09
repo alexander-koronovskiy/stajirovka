@@ -3,28 +3,21 @@ p = 1
 q = len(A)
 
 
-def Partition(A,p,q):
-    i=p
-    x=A[i]
-    for j in range(p+1,q+1):
-        if A[j]<=x:
-            i=i+1
-            tmp=A[j]
-            A[j]=A[i]
-            A[i]=tmp
-    l=A[p]
-    A[p]=A[i]
-    A[i]=l
-    return i
+def slow_rec(data, i, j):
+    if i < j:
+        m = (i + j) // 2
+        slow_rec(data, i, m)
+        slow_rec(data, m + 1, j)
+        if data[m] > data[j]:
+            data[m], data[j] = data[j], data[m]
+        slow_rec(data, i, j - 1)
+        return data
+    if i >= j:
+        return data
 
 
-def quicksort(A,p,r):
-    if p<r:
-        q = (p + r) // 2
-        quicksort(A, p, q)
-        quicksort(A, q + 1, r)
-    return A
+def slow(data):
+    return slow_rec(data, 0, len(data) - 1)
 
 
-res = quicksort(A, p, q)
-print(res)
+print(slow(A))
