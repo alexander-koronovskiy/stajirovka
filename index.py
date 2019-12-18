@@ -44,16 +44,14 @@ def write_csv_file(path, fieldnames, data):
 
 # чтение csv-файла
 def read_csv_file(csv_path):
-    with open(csv_path, "r") as f_obj:
-        s = csv_reader(f_obj)
-    return s
-
-
-def csv_reader(file_obj):
-    reader = csv.reader(file_obj)
-    s = ""
+    reader = csv.reader(csv_path)
+    filename = ""
     for row in reader:
-        s += (" ".join(row)) + "\n"
+        filename += (" ".join(row))
+    s = list()
+    with open(filename, "r") as f_obj:
+        for row in f_obj:
+            s.append(row[:-1:].split(","))
     return s
 
 
@@ -70,5 +68,5 @@ if __name__ == "__main__":
     write_csv_file(file2, params[0], params[1])
 
     # чтение первого файла
-    s = read_csv_file(file1)
+    s = read_csv_file(file2)
     print(s)
