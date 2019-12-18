@@ -1,23 +1,22 @@
-A = [5, 2, 4, 6, 1, 3, 2, 6]
-p = 1
-q = len(A)
+def merge(data, p, q, r):
+    if data[q] > data[r]:
+        data[q], data[r] = data[r], data[q]
+    slow_rec(data, p, r - 1)
+    return data
 
 
-def slow_rec(data, i, j):
-    if i < j:
-        m = (i + j) // 2
-        slow_rec(data, i, m)
-        slow_rec(data, m + 1, j)
-        if data[m] > data[j]:
-            data[m], data[j] = data[j], data[m]
-        slow_rec(data, i, j - 1)
-        return data
-    if i >= j:
-        return data
+def slow_rec(A, p, r):
+    if p < r:
+        q = (p + r) // 2
+        slow_rec(A, p, q)
+        slow_rec(A, q + 1, r)
+        merge(A, p, q, r)
+    return A
 
 
 def slow(data):
     return slow_rec(data, 0, len(data) - 1)
 
 
+A = [5, 2, 4, 6, 1, 3, 2, 6]
 print(slow(A))
