@@ -1,13 +1,3 @@
-'''
-создать тестовые csv файлы
-прочитать два файла с расширением .csv
-вывести для теста некоторые строки
-записать содержимое файлов в отдельные массивы
-установить соответствие между массивами
-создать файл out.csv - и вывести в него массивы
-применить программу для 
-'''
-
 import csv
 
 SAMPLEDATA_A = ["first_name,last_name,city".split(","),
@@ -23,8 +13,8 @@ SAMPLEDATA_P = ["first_name,last_name,id_card".split(","),
             ]
 
 
-# извлечение данных
-def get_params(data):
+# извлечение данных из файла, и перезапись их в словарь
+def write_to_dict(data):
     my_list = []
     fieldnames = data[0]
     for values in data[1:]:
@@ -56,17 +46,61 @@ def read_csv_file(csv_path):
 
 
 if __name__ == "__main__":
+    '''
+    In_data_a
+    date - дата в формате YYYY-MM-DD
+    campaign - название рекламной кампании
+    id - идентификатор источника рекламы
+    ad_id - идентификатор баннера, который использовался в рекламной кампании
+    os - операционная система мобильного устройства, на которое были совершены установки.
+    installs - количество установок рекламируемого мобильного приложения
+    app - название мобильного приложения
 
-    # запись первого тестового файла
-    file1 = "dict_input_a.csv"
-    params = get_params(SAMPLEDATA_A)
-    write_csv_file(file1, params[0], params[1])
+    In_data_p
+    date - дата в формате YYYY-MM-DD
+    campaign_id - идентификатор рекламной кампании
+    ad_id - идентификатор баннера, который использовался в рекламной кампании
+    spend - сумма, которая была потрачена на рекламу мобильного приложения 
 
-    # запись второго тестового файла
-    file2 = "dict_input_p.csv"
-    params = get_params(SAMPLEDATA_P)
-    write_csv_file(file2, params[0], params[1])
+    out
+    app - название мобильного приложения
+    date - дата в формате YYYY-MM-DD
+    campaign - название рекламной кампании
+    os - операционная система мобильного устройства, на которое были совершены установки
+    installs -  количество установок рекламируемого мобильного приложения 
+    spend - сумма потраченная на рекламу
+    cpi - (cost per install) стоимость одной установки, используя значения spend и installs
+    '''
 
-    # чтение первого файла
-    s = read_csv_file(file2)
-    print(s)
+    # чтение данных из файлов
+    a = read_csv_file("in_data_a.csv")
+    p = read_csv_file("in_data_p.csv")
+
+    # получение наименования полей
+    fields_a = write_to_dict(a)[0]
+    fields_p = write_to_dict(p)[0]
+
+    # получение полей данных
+    data_a = write_to_dict(a)[1]
+    data_p = write_to_dict(p)[1]
+
+    # вывод полей
+    print("data a:", fields_a, "data p:", fields_p)
+    print(len(data_a), len(data_p))
+
+    # список для вывода
+    data_out = list()
+
+    # значения 'Date', 'Campaign', 'ad_id', должны совпадать со значениями из _p
+    # если совпадает - конкатенируем найденное, совмещаем все в одну строчку-словарь
+    for p_i in data_p:
+        for a_i in data_a:
+            if a_i.get('Date')==p_i.get('date') and \
+                a_i.get('Campaign')==p_i.get('campaign') and \
+                    a_i.get('ad_id')==p_i.get('ad_id'):
+                print(a_i.get('ad_id'))
+
+    # убираем найденное значение из второго массива _p
+    # берем следующее значение из массива _a, ищем среди оставшихся элементов массива _p
+
+    # для полученого ключа вычислить значение по ф-ле cpi = spend / installs
